@@ -208,7 +208,7 @@ public class Student{
           String sql = sb.toString().replace(";", ""); // Remove the semicolon
           try {
               stmt.execute(sql);
-              System.out.println("Executed: " + sql); // lets us confirm that the things were added
+              //System.out.println("Executed: " + sql); // lets us confirm that the things were added
           } catch (SQLException e) {
               System.out.println("Error executing SQL command: " + sql);
               e.printStackTrace();
@@ -342,22 +342,44 @@ public class Student{
 	private static void searchByPublicationID(Scanner myScanner) throws SQLException
 	{
 		String publicationID;
-		
+	
 		System.out.print("Enter the publication ID: ");
 		publicationID = myScanner.next();
 		myScanner.nextLine();
 		
-		try(Statement stmt = con.createStatement())
+		try
 		{
-			String allAttributes = "Select PublicationID, year, type, title, Summary from Publications where PublicationID = " + publicationID + ";";
-			String authorCount = "Select Count(" + publicationID + ") from Publications where PublicationID in (Select publicationID from Authors);";
-			stmt.executeUpdate(allAttributes);
-			stmt.executeUpdate(authorCount);
-		}
+			String allAttributes = "Select PublicationID, year, type, title, Summary from Publications where PublicationID = " + publicationID;
+				PreparedStatement pmstm = con.prepareStatement(allAttributes); // preparing the statement 
+				ResultSet rs = pmstm.executeQuery(); // result set interface to hold values of query
+				
+			if(rs.next()) { // rs starts at 0, need to move it next. returns false at no more rows.
+				//https://docs.oracle.com/javase/8/docs/api/java/sql/ResultSet.html
+                    System.out.println("PublicationID: " + rs.getString("PublicationID"));
+                    System.out.println("Year: " + rs.getInt("year"));
+                    System.out.println("Type: " + rs.getString("type"));
+                    System.out.println("Title: " + rs.getString("title"));
+                    System.out.println("Summary: " + rs.getString("Summary"));	
+			}
+                    
+             String authorCount = "Select Count(*) AS IntCount from Authors where PublicationID = " + publicationID;
+             PreparedStatement pmstmAuthor = con.prepareStatement(authorCount);
+             ResultSet rsAuthor = pmstmAuthor.executeQuery();
+             
+             	if (rsAuthor.next()) {
+             		System.out.println("Number Authors: " + rsAuthor.getInt("IntCount")); // made column intcount
+             	}
+             
+             //rsAttributes = stmt.executeQuery(allAttributes);
+			//stmt.executeQuery(authorCount);
+		
+		} // end all attributes
 		catch (SQLException e) 
 		{
 			e.printStackTrace();
 		}
+
+	        
 	}//end searchByPublicationID
 	
 	private static void searchByOneOrMoreAttributes(Scanner myScanner) throws SQLException
