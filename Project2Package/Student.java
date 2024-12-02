@@ -1,4 +1,5 @@
-package project2Package;
+package Project2Package;
+
 
 import java.util.Scanner; 
 import java.math.*;
@@ -308,10 +309,21 @@ public class Student{
 		
 		if(typedYes(publications))
 		{
-			try(Statement stmt = con.createStatement())
+			try
 			{
 				String allPublications = "SELECT PublicationID, Year, Type, Title, Summary FROM Publications";
-				stmt.executeQuery(allPublications);
+				PreparedStatement pstmt = con.prepareStatement(allPublications);
+				ResultSet rs = pstmt.executeQuery(allPublications);
+				
+				while(rs.next())
+				{
+                    System.out.println("PublicationID: " + rs.getString("PublicationID"));
+                    System.out.println("Year: " + rs.getInt("year"));
+                    System.out.println("Type: " + rs.getString("type"));
+                    System.out.println("Title: " + rs.getString("title"));
+                    System.out.println("Summary: " + rs.getString("Summary"));	
+                    System.out.println();
+				}
 			}
 			catch (SQLException e) 
 			{
@@ -321,10 +333,18 @@ public class Student{
 		
 		if(typedYes(authors))
 		{
-			try(Statement stmt = con.createStatement())
+			try
 			{
 				String allAuthors = "Select Author, PublicationID from Authors";
-				stmt.executeQuery(allAuthors);
+				PreparedStatement pstmt = con.prepareStatement(allAuthors);
+				ResultSet rs = pstmt.executeQuery(allAuthors);
+				
+				while(rs.next())
+				{
+					System.out.println("Publication ID: " + rs.getString("PublicationID"));
+					System.out.println("Author: " + rs.getString("Author"));
+					System.out.println();
+				}
 			}
 			catch (SQLException e) 
 			{
@@ -370,6 +390,7 @@ public class Student{
              	if (rsAuthor.next()) {
              		System.out.println("Number Authors: " + rsAuthor.getInt("IntCount")); // made column intcount
              	}
+             	System.out.println();
              
              //rsAttributes = stmt.executeQuery(allAttributes);
 			//stmt.executeQuery(authorCount);
