@@ -1,5 +1,6 @@
 package project2Package;
 
+
 import java.util.Scanner; 
 import java.math.*;
 import java.io.*;
@@ -308,10 +309,21 @@ public class Student{
 		
 		if(typedYes(publications))
 		{
-			try(Statement stmt = con.createStatement())
+			try
 			{
 				String allPublications = "SELECT PublicationID, Year, Type, Title, Summary FROM Publications";
-				stmt.executeQuery(allPublications);
+				PreparedStatement pstmt = con.prepareStatement(allPublications);
+				ResultSet rs = pstmt.executeQuery(allPublications);
+				
+				while(rs.next())
+				{
+                    System.out.println("PublicationID: " + rs.getString("PublicationID"));
+                    System.out.println("Year: " + rs.getInt("year"));
+                    System.out.println("Type: " + rs.getString("type"));
+                    System.out.println("Title: " + rs.getString("title"));
+                    System.out.println("Summary: " + rs.getString("Summary"));	
+                    System.out.println();
+				}
 			}
 			catch (SQLException e) 
 			{
@@ -321,10 +333,18 @@ public class Student{
 		
 		if(typedYes(authors))
 		{
-			try(Statement stmt = con.createStatement())
+			try
 			{
 				String allAuthors = "Select Author, PublicationID from Authors";
-				stmt.executeQuery(allAuthors);
+				PreparedStatement pstmt = con.prepareStatement(allAuthors);
+				ResultSet rs = pstmt.executeQuery(allAuthors);
+				
+				while(rs.next())
+				{
+					System.out.println("Publication ID: " + rs.getString("PublicationID"));
+					System.out.println("Author: " + rs.getString("Author"));
+					System.out.println();
+				}
 			}
 			catch (SQLException e) 
 			{
@@ -370,6 +390,7 @@ public class Student{
              	if (rsAuthor.next()) {
              		System.out.println("Number Authors: " + rsAuthor.getInt("IntCount")); // made column intcount
              	}
+             	System.out.println();
              
              //rsAttributes = stmt.executeQuery(allAttributes);
 			//stmt.executeQuery(authorCount);
@@ -389,8 +410,9 @@ public class Student{
 		String title;
 		String year;
 		String type;
+		String sortBy;
 		
-		System.out.println("Enter as many of the following attributes as you wish:");
+		System.out.println("Enter as many of the following attributes as you wish. To leave an attribute empty press Enter:");
 		
 		System.out.println("Author: ");
 		author = myScanner.nextLine();
@@ -401,14 +423,54 @@ public class Student{
 		System.out.println();
 		
 		System.out.println("Year: ");
-		year = myScanner.next();
-		myScanner.nextLine();
+		year = myScanner.nextLine();
 		System.out.println();
 		
 		System.out.println("Type: ");
 		type = myScanner.nextLine();
 		System.out.println();
 		
+		System.out.println("sort by:  (Author, Title, Year, Type, publicationID)" );
+		sortBy = myScanner.nextLine();
+		
+		if (!sortBy.matches("Author|Title|Year|Type|PublicationID")) {
+	        System.out.println("Invalid sortBy column. Defaulting to PublicationID.");
+	        sortBy = "PublicationID";  // sort by pubID if they dont specify
+	    }
+		
+		
+		StringBuilder  SearchAttributes = new StringBuilder( "Select DISTINCT p.PublicationID, p.year, p.type, p.title, p.Summary, from Publications p JOIN authors a on p.publicationID = a.publicationID WHERE 1=1" ) ; // where is just true. but now can add stuff
+		
+	    if (!author.isEmpty()) {
+	        SearchAttributes.append(" AND a.Author = " + "'" + author + "'");
+	    }
+	    if (!title.isEmpty()) {
+	    	SearchAttributes.append(" AND p.Title = " + "'" + title + "'");
+	    }
+	    if (!year.isEmpty()) {
+	    	SearchAttributes.append(" AND p.Year =  " + year);
+	    }
+	    if (!type.isEmpty()) {
+	    	SearchAttributes.append(" AND p.Type =  " + "'" + type + "'");
+	    }
+	    if (!sortBy.isEmpty()) {
+	    	SearchAttributes.append(" ORDER BY  " + sortBy);
+	    }
+		
+		
+		PreparedStatement pmstm = con.prepareStatement(SearchAttributes.toString()); // preparing the statement 
+		ResultSet rs = pmstm.executeQuery(); // result set interface to hold values of query
+		
+		
+		while(rs.next()) { // dont just want next. need all of them, so using while
+                System.out.println("PublicationID: " + rs.getString("PublicationID"));
+                System.out.println("Year: " + rs.getInt("year"));
+                System.out.println("Type: " + rs.getString("type"));
+                System.out.println("Title: " + rs.getString("title"));
+                System.out.println("Summary: " + rs.getString("Summary"));	
+                System.out.println("___________________________________________");
+                System.out.println();
+		}
 	}//end searchByOneOrMoreAttributes
 	
 	private static boolean typedYesOrNo(String input)
