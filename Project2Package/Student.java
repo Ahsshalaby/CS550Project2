@@ -362,21 +362,21 @@ public class Student{
 		
 		System.out.println("Enter as many of the following attributes as you wish:");
 		
-		System.out.print("Author: ");
-		author = myScanner.next();
-		myScanner.nextLine();
+		System.out.println("Author: ");
+		author = myScanner.nextLine();
+		System.out.println();
 		
-		System.out.print("Title: ");
-		title = myScanner.next();
-		myScanner.nextLine();
+		System.out.println("Title: ");
+		title = myScanner.nextLine();
+		System.out.println();
 		
-		System.out.print("Year: ");
-		year = myScanner.next();
-		myScanner.nextLine();
+		System.out.println("Year: ");
+		year = myScanner.nextLine();
+		System.out.println();
 		
 		System.out.print("Type: ");
-		type = myScanner.next();
-		myScanner.nextLine();
+		type = myScanner.nextLine();
+		System.out.println();
 		
 	}//end searchByOneOrMoreAttributes
 	
