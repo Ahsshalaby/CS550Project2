@@ -440,7 +440,7 @@ public class Student{
 	    }
 		
 		
-		StringBuilder  SearchAttributes = new StringBuilder( "Select DISTINCT p.PublicationID, p.year, p.type, p.title, p.Summary, from Publications p JOIN authors a on p.publicationID = a.publicationID WHERE 1=1" ) ; // where is just true. but now can add stuff
+		StringBuilder  SearchAttributes = new StringBuilder( "Select DISTINCT p.PublicationID, p.year, p.type, p.title, p.Summary from Publications p JOIN authors a on p.publicationID = a.publicationID WHERE 1=1" ) ; // where is just true. but now can add stuff
 		
 	    if (!author.isEmpty()) {
 	        SearchAttributes.append(" AND a.Author = " + "'" + author + "'");
