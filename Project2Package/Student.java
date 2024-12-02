@@ -371,7 +371,8 @@ public class Student{
 		System.out.println();
 		
 		System.out.println("Year: ");
-		year = myScanner.nextLine();
+		year = myScanner.next();
+		myScanner.nextLine();
 		System.out.println();
 		
 		System.out.println("Type: ");
