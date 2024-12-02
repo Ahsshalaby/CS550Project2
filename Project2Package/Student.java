@@ -303,7 +303,7 @@ public class Student{
 			myScanner.nextLine();
 			if(!typedYesOrNo(authors))
 				System.out.println("Invalid input of " + publications);
-		}while(!typedYesOrNo(publications));
+		}while(!typedYesOrNo(authors));
 		
 		if(typedYes(publications))
 		{
