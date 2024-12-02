@@ -1,4 +1,4 @@
-package project2Package;
+package Project2Package;
 
 import java.util.Scanner; 
 import java.math.*;
@@ -349,8 +349,8 @@ public class Student{
 		
 		try(Statement stmt = con.createStatement())
 		{
-			String allAttributes = "Select PublicationID, year, type, title, Summary from Publications where PublicationID = " + publicationID + ";";
-			String authorCount = "Select Count(" + publicationID + ") from Publications where PublicationID in (Select publicationID from Authors);";
+			String allAttributes = "Select PublicationID, year, type, title, Summary from Publications where PublicationID = " + publicationID;
+			String authorCount = "Select Count(" + publicationID + ") from Publications where PublicationID in (Select publicationID from Authors)";
 			stmt.executeUpdate(allAttributes);
 			stmt.executeUpdate(authorCount);
 		}
