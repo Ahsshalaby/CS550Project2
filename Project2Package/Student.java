@@ -1,4 +1,4 @@
-package Project2Package;
+package project2Package;
 
 import java.util.Scanner; 
 import java.math.*;
@@ -309,8 +309,8 @@ public class Student{
 		{
 			try(Statement stmt = con.createStatement())
 			{
-				String allPublications = "Select PublicationID, Year, Type, Title, Summary from Publications;";
-				stmt.executeUpdate(allPublications);
+				String allPublications = "SELECT PublicationID, Year, Type, Title, Summary FROM Publications";
+				stmt.executeQuery(allPublications);
 			}
 			catch (SQLException e) 
 			{
@@ -322,14 +322,21 @@ public class Student{
 		{
 			try(Statement stmt = con.createStatement())
 			{
-				String allAuthors = "Select Author, PublicationID from Authors;";
-				stmt.executeUpdate(allAuthors);
+				String allAuthors = "Select Author, PublicationID from Authors";
+				stmt.executeQuery(allAuthors);
 			}
 			catch (SQLException e) 
 			{
   		      e.printStackTrace();
   		    }
 		}
+		
+		
+	
+		    
+		
+		
+		
 	}//end viewTableContents
 	
 	private static void searchByPublicationID(Scanner myScanner) throws SQLException
