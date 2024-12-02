@@ -1,7 +1,6 @@
 package Project2Package;
 
 
-
 import java.util.Scanner; 
 import java.math.*;
 import java.io.*;
@@ -192,6 +191,7 @@ public class Student{
     	// rather than copy and paste, more appropriate to have java read the file, and stop each statement at the semicolons
     	
     	try(BufferedReader br = new BufferedReader (new FileReader(filePath))) {
+    	System.out.println("Generating Tables...");
     	String tuple; // each line of file between semi colons
 
     	StringBuilder sb = new StringBuilder(); // mutable string. 
@@ -458,20 +458,27 @@ public class Student{
 	    	SearchAttributes.append(" ORDER BY  " + sortBy);
 	    }
 		
-		
-		PreparedStatement pmstm = con.prepareStatement(SearchAttributes.toString()); // preparing the statement 
-		ResultSet rs = pmstm.executeQuery(); // result set interface to hold values of query
-		
-		
-		while(rs.next()) { // dont just want next. need all of them, so using while
-                System.out.println("PublicationID: " + rs.getString("PublicationID"));
-                System.out.println("Year: " + rs.getInt("year"));
-                System.out.println("Type: " + rs.getString("type"));
-                System.out.println("Title: " + rs.getString("title"));
-                System.out.println("Summary: " + rs.getString("Summary"));	
-                System.out.println("___________________________________________");
-                System.out.println();
+		try
+		{
+			PreparedStatement pmstm = con.prepareStatement(SearchAttributes.toString()); // preparing the statement 
+			ResultSet rs = pmstm.executeQuery(); // result set interface to hold values of query
+			
+			
+			while(rs.next()) { // dont just want next. need all of them, so using while
+	                System.out.println("PublicationID: " + rs.getString("PublicationID"));
+	                System.out.println("Year: " + rs.getInt("year"));
+	                System.out.println("Type: " + rs.getString("type"));
+	                System.out.println("Title: " + rs.getString("title"));
+	                System.out.println("Summary: " + rs.getString("Summary"));	
+	                System.out.println("___________________________________________");
+	                System.out.println();
+			}
 		}
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+		
 	}//end searchByOneOrMoreAttributes
 	
 	private static boolean typedYesOrNo(String input)
