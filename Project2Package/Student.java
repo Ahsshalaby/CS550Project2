@@ -1,13 +1,11 @@
-package project2Package;
+package Project2Package;
 
 
 import java.util.Scanner; 
-import java.math.*;
 import java.io.*;
 //oracle.sql imports did not want to work on my version of java no matter what I did and how I configured build paths after trying for hours
 // using different imports from the net that are supposedly more modern
 import java.sql.*;
-import java.util.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -191,12 +189,12 @@ public class Student{
     	// rather than copy and paste, more appropriate to have java read the file, and stop each statement at the semicolons
     	
     	try(BufferedReader br = new BufferedReader (new FileReader(filePath))) {
+    	System.out.println("Generating tables...");
     	String tuple; // each line of file between semi colons
 
     	StringBuilder sb = new StringBuilder(); // mutable string. 
     	
     	Statement stmt = con.createStatement();
-    	int lineNumber = 1;
     	
     	 while ((tuple = br.readLine()) != null) {
              tuple = tuple.trim(); // remove whitespace
@@ -350,14 +348,7 @@ public class Student{
 			{
   		      e.printStackTrace();
   		    }
-		}
-		
-		
-	
-		    
-		
-		
-		
+		}	
 	}//end viewTableContents
 	
 	private static void searchByPublicationID(Scanner myScanner) throws SQLException
@@ -465,32 +456,32 @@ public class Student{
 		StringBuilder  SearchAttributes = new StringBuilder( "Select DISTINCT ");
 		boolean isFirst = true;
 		
-		 if (OutputID.equalsIgnoreCase("yes")) {
+		 if (typedYes(OutputID)) {
 	            if (!isFirst) SearchAttributes.append(", ");
 	            SearchAttributes.append("p.PublicationID");
 	            isFirst = false;
 	        }
-	        if (OutputAuthor.equalsIgnoreCase("yes")) {
+	        if (typedYes(OutputAuthor)) {
 	            if (!isFirst) SearchAttributes.append(", ");
 	            SearchAttributes.append("a.Author");
 	            isFirst = false;
 	        }
-	        if (OutputTitle.equalsIgnoreCase("yes")) {
+	        if (typedYes(OutputTitle)) {
 	            if (!isFirst) SearchAttributes.append(", ");
 	            SearchAttributes.append("p.Title");
 	            isFirst = false;
 	        }
-	        if (OutputYear.equalsIgnoreCase("yes")) {
+	        if (typedYes(OutputYear)) {
 	            if (!isFirst) SearchAttributes.append(", ");
 	            SearchAttributes.append("p.Year");
 	            isFirst = false;
 	        }
-	        if (OutputType.equalsIgnoreCase("yes")) {
+	        if (typedYes(OutputType)) {
 	            if (!isFirst) SearchAttributes.append(", ");
 	            SearchAttributes.append("p.Type");
 	            isFirst = false;
 	        }
-	        if (OutputSummary.equalsIgnoreCase("yes")) {
+	        if (typedYes(OutputSummary)) {
 	            if (!isFirst) SearchAttributes.append(", ");
 	            SearchAttributes.append("p.Summary");
 	            isFirst = false;
@@ -535,37 +526,25 @@ public class Student{
 		
 		while(rs.next()) { // dont just want next. need all of them, so using while
                 
-			 if (OutputID.equalsIgnoreCase("yes")) {
+			 if (typedYes(OutputID)) {
 				 System.out.println("PublicationID: " + rs.getString("PublicationID"));
 		        }
-		        if (OutputAuthor.equalsIgnoreCase("yes")) {
+		        if (typedYes(OutputAuthor)) {
 		        	 System.out.println("Author: " + rs.getString("Author"));
 		        }
-		        if (OutputTitle.equalsIgnoreCase("yes")) {
+		        if (typedYes(OutputTitle)) {
 		            System.out.println("Title: " + rs.getString("title"));
 		        }
-		        if (OutputYear.equalsIgnoreCase("yes")) {
+		        if (typedYes(OutputYear)) {
 		        	   System.out.println("Year: " + rs.getInt("Year"));
 		        }
-		        if (OutputType.equalsIgnoreCase("yes")) {
+		        if (typedYes(OutputType)) {
 		            System.out.println("Type: " + rs.getString("type"));
 		        }
-		        if (OutputSummary.equalsIgnoreCase("yes")) {
+		        if (typedYes(OutputSummary)) {
 		            System.out.println("Summary: " + rs.getString("Summary"));	
 		        }
-			
-			
-			
-			
-          
-          
-    
-          
-                
-                
-                
-                
-                
+
                 System.out.println("___________________________________________");
                 System.out.println();
 		}
