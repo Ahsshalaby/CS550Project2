@@ -1,4 +1,4 @@
-package Project2Package;
+package project2Package;
 
 
 import java.util.Scanner; 
@@ -191,7 +191,6 @@ public class Student{
     	// rather than copy and paste, more appropriate to have java read the file, and stop each statement at the semicolons
     	
     	try(BufferedReader br = new BufferedReader (new FileReader(filePath))) {
-    	System.out.println("Generating Tables...");
     	String tuple; // each line of file between semi colons
 
     	StringBuilder sb = new StringBuilder(); // mutable string. 
@@ -413,9 +412,17 @@ public class Student{
 		String type;
 		String sortBy;
 		
-		System.out.println("Enter as many of the following attributes as you wish. To leave an attribute empty press Enter:");
+		String OutputID;
+		String OutputAuthor;
+		String OutputTitle;
+		String OutputYear;
+		String OutputType;
+		String OutputSummary;
 		
-		System.out.println("Author: ");
+		
+		System.out.println("Enter specifics Inputs you would like. To leave an attribute empty press Enter:");
+		
+		System.out.println("Author Name: ");
 		author = myScanner.nextLine();
 		System.out.println();
 		
@@ -423,13 +430,28 @@ public class Student{
 		title = myScanner.nextLine();
 		System.out.println();
 		
-		System.out.println("Year: ");
+		System.out.println("Year (2016 or 2017): ");
 		year = myScanner.nextLine();
 		System.out.println();
 		
-		System.out.println("Type: ");
+		System.out.println("Type (short or long): ");
 		type = myScanner.nextLine();
 		System.out.println();
+		
+		
+		System.out.println("Output Publication ID? (yes/no)");
+		OutputID = myScanner.nextLine();
+		System.out.println("Output Author? (yes/no)");
+		OutputAuthor = myScanner.nextLine();
+		System.out.println("Output Title? (yes/no)");
+		OutputTitle = myScanner.nextLine();
+		System.out.println("Output Year? (yes/no)");
+		OutputYear = myScanner.nextLine();
+		System.out.println("Output Type? (yes/no)");
+		OutputType = myScanner.nextLine();
+		System.out.println("Output Summary? (yes/no)");
+		OutputSummary = myScanner.nextLine();
+		
 		
 		System.out.println("sort by:  (Author, Title, Year, Type, publicationID)" );
 		sortBy = myScanner.nextLine();
@@ -440,7 +462,50 @@ public class Student{
 	    }
 		
 		
-		StringBuilder  SearchAttributes = new StringBuilder( "Select DISTINCT p.PublicationID, p.year, p.type, p.title, p.Summary from Publications p JOIN authors a on p.publicationID = a.publicationID WHERE 1=1" ) ; // where is just true. but now can add stuff
+		StringBuilder  SearchAttributes = new StringBuilder( "Select DISTINCT ");
+		boolean isFirst = true;
+		
+		 if (OutputID.equalsIgnoreCase("yes")) {
+	            if (!isFirst) SearchAttributes.append(", ");
+	            SearchAttributes.append("p.PublicationID");
+	            isFirst = false;
+	        }
+	        if (OutputAuthor.equalsIgnoreCase("yes")) {
+	            if (!isFirst) SearchAttributes.append(", ");
+	            SearchAttributes.append("a.Author");
+	            isFirst = false;
+	        }
+	        if (OutputTitle.equalsIgnoreCase("yes")) {
+	            if (!isFirst) SearchAttributes.append(", ");
+	            SearchAttributes.append("p.Title");
+	            isFirst = false;
+	        }
+	        if (OutputYear.equalsIgnoreCase("yes")) {
+	            if (!isFirst) SearchAttributes.append(", ");
+	            SearchAttributes.append("p.Year");
+	            isFirst = false;
+	        }
+	        if (OutputType.equalsIgnoreCase("yes")) {
+	            if (!isFirst) SearchAttributes.append(", ");
+	            SearchAttributes.append("p.Type");
+	            isFirst = false;
+	        }
+	        if (OutputSummary.equalsIgnoreCase("yes")) {
+	            if (!isFirst) SearchAttributes.append(", ");
+	            SearchAttributes.append("p.Summary");
+	            isFirst = false;
+	        }
+
+	        // Handle the case where no attributes were selected
+	        if (isFirst) {
+	            System.out.println("No attributes selected. Defaulting to PublicationID.");
+	            SearchAttributes.append("p.PublicationID");
+	        }
+				
+	        SearchAttributes.append(" FROM Publications p JOIN authors a on p.publicationID = a.publicationID WHERE 1=1");
+		
+		
+		
 		
 	    if (!author.isEmpty()) {
 	        SearchAttributes.append(" AND a.Author = " + "'" + author + "'");
@@ -455,30 +520,55 @@ public class Student{
 	    	SearchAttributes.append(" AND p.Type =  " + "'" + type + "'");
 	    }
 	    if (!sortBy.isEmpty()) {
-	    	SearchAttributes.append(" ORDER BY  " + sortBy);
+	    	 if (SearchAttributes.indexOf(sortBy) == -1) { 
+	    	        // sb returns -1 if sort by is not found in the Select index. so code does not break
+	    	      System.out.print("Selected Sort By is not in Your Outputs, Default Sorting");
+	    	    }
+	    	 else
+	    		 SearchAttributes.append(" ORDER BY  " + sortBy);
 	    }
 		
-		try
-		{
-			PreparedStatement pmstm = con.prepareStatement(SearchAttributes.toString()); // preparing the statement 
-			ResultSet rs = pmstm.executeQuery(); // result set interface to hold values of query
-			
-			
-			while(rs.next()) { // dont just want next. need all of them, so using while
-	                System.out.println("PublicationID: " + rs.getString("PublicationID"));
-	                System.out.println("Year: " + rs.getInt("year"));
-	                System.out.println("Type: " + rs.getString("type"));
-	                System.out.println("Title: " + rs.getString("title"));
-	                System.out.println("Summary: " + rs.getString("Summary"));	
-	                System.out.println("___________________________________________");
-	                System.out.println();
-			}
-		}
-		catch (SQLException e) 
-		{
-			e.printStackTrace();
-		}
 		
+		PreparedStatement pmstm = con.prepareStatement(SearchAttributes.toString()); // preparing the statement 
+		ResultSet rs = pmstm.executeQuery(); // result set interface to hold values of query
+		
+		
+		while(rs.next()) { // dont just want next. need all of them, so using while
+                
+			 if (OutputID.equalsIgnoreCase("yes")) {
+				 System.out.println("PublicationID: " + rs.getString("PublicationID"));
+		        }
+		        if (OutputAuthor.equalsIgnoreCase("yes")) {
+		        	 System.out.println("Author: " + rs.getString("Author"));
+		        }
+		        if (OutputTitle.equalsIgnoreCase("yes")) {
+		            System.out.println("Title: " + rs.getString("title"));
+		        }
+		        if (OutputYear.equalsIgnoreCase("yes")) {
+		        	   System.out.println("Year: " + rs.getInt("Year"));
+		        }
+		        if (OutputType.equalsIgnoreCase("yes")) {
+		            System.out.println("Type: " + rs.getString("type"));
+		        }
+		        if (OutputSummary.equalsIgnoreCase("yes")) {
+		            System.out.println("Summary: " + rs.getString("Summary"));	
+		        }
+			
+			
+			
+			
+          
+          
+    
+          
+                
+                
+                
+                
+                
+                System.out.println("___________________________________________");
+                System.out.println();
+		}
 	}//end searchByOneOrMoreAttributes
 	
 	private static boolean typedYesOrNo(String input)
